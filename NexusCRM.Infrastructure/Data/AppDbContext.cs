@@ -9,7 +9,7 @@ public class AppDbContext : DbContext
 
     // DbSets for the entities in the application
     public DbSet<User> Users => Set<User>();
-    public DbSet<Company> Companys => Set<Company>();
+    public DbSet<Company> Companies => Set<Company>();
 
     // Override OnModelCreating to apply configurations and set up global query filters
     protected override void OnModelCreating(ModelBuilder modelBuilder)
