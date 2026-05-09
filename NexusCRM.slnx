@@ -1,1 +1,6 @@
-<Solution />
+<Solution>
+  <Project Path="NexusCRM.API/NexusCRM.API.csproj" />
+  <Project Path="NexusCRM.Application/NexusCRM.Application.csproj" />
+  <Project Path="NexusCRM.Domain/NexusCRM.Domain.csproj" />
+  <Project Path="NexusCRM.Infrastructure/NexusCRM.Infrastructure.csproj" />
+</Solution>
