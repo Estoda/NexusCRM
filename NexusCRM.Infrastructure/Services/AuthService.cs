@@ -73,6 +73,15 @@ public class AuthService : IAuthService
         if (!passwordValid)
             throw new Exception("Invalid email or password.");
 
+        if (user.CompanyId.HasValue)
+        {
+            var company = await _context.Companies
+                .FirstOrDefaultAsync(c => c.Id == user.CompanyId);
+
+            if (company == null || !company.IsActive)
+                throw new Exception("Your company account has been suspended.");
+        }
+
         if (!user.IsActive)
             throw new Exception("Your account has been deactivated.");
 
