@@ -1,5 +1,4 @@
 # NexusCRM 🚀
-
 ### A SaaS CRM Platform for Small Businesses
 
 ![.NET](https://img.shields.io/badge/.NET-10.0-512BD4?style=flat-square&logo=dotnet)
@@ -50,7 +49,6 @@ NexusCRM/
 ```
 
 ### Dependency Flow
-
 ```
 API → Application → Domain
 Infrastructure → Application → Domain
@@ -62,29 +60,29 @@ Infrastructure → Application → Domain
 
 ## 🛠️ Tech Stack
 
-| Layer            | Technology                           |
-| ---------------- | ------------------------------------ |
-| Framework        | ASP.NET Core 8 Web API               |
-| Database         | SQL Server + Entity Framework Core 8 |
-| Authentication   | JWT Bearer + Refresh Tokens          |
-| Password Hashing | BCrypt.Net                           |
-| Validation       | FluentValidation                     |
-| Mapping          | AutoMapper                           |
-| Background Jobs  | Hangfire                             |
-| Logging          | Serilog                              |
-| Caching          | Redis                                |
-| Containerization | Docker + Docker Compose              |
-| API Docs         | Swagger / OpenAPI                    |
+| Layer | Technology |
+|---|---|
+| Framework | ASP.NET Core 10 Web API |
+| Database | SQL Server + Entity Framework Core 10 |
+| Authentication | JWT Bearer + Refresh Tokens |
+| Password Hashing | BCrypt.Net |
+| Validation | FluentValidation |
+| Mapping | AutoMapper |
+| Background Jobs | Hangfire |
+| Logging | Serilog |
+| Caching | Redis |
+| Containerization | Docker + Docker Compose |
+| API Docs | Scalar (OpenAPI) |
 
 ---
 
 ## 👤 User Roles
 
-| Role             | Description                                                     |
-| ---------------- | --------------------------------------------------------------- |
-| **SuperAdmin**   | Platform owner — manages all tenants, subscriptions, audit logs |
-| **CompanyAdmin** | Company owner — manages employees, clients, invoices, reports   |
-| **Employee**     | Regular worker — manages assigned tasks, client notes, files    |
+| Role | Description |
+|---|---|
+| **SuperAdmin** | Platform owner — manages all tenants, subscriptions, audit logs |
+| **CompanyAdmin** | Company owner — manages employees, clients, invoices, reports |
+| **Employee** | Regular worker — manages assigned tasks, client notes, files |
 
 ---
 
@@ -92,10 +90,10 @@ Infrastructure → Application → Domain
 
 ### Prerequisites
 
-- [.NET 8 SDK](https://dotnet.microsoft.com/download)
+- [.NET 10 SDK](https://dotnet.microsoft.com/download)
 - [SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
 - [Visual Studio 2022](https://visualstudio.microsoft.com/) or later
-- [Docker](https://www.docker.com/) _(optional)_
+- [Docker](https://www.docker.com/) *(optional)*
 
 ### 1. Clone the Repository
 
@@ -142,7 +140,7 @@ Update-Database -StartupProject NexusCRM.API
 dotnet run --project NexusCRM.API
 ```
 
-API will be available at `https://localhost:{port}/swagger`
+API docs available at `https://localhost:{port}/scalar`
 
 ---
 
@@ -160,11 +158,17 @@ docker-compose up --build
 
 ### Authentication
 
-| Method | Endpoint                  | Description                  | Auth   |
-| ------ | ------------------------- | ---------------------------- | ------ |
-| POST   | `/api/auth/register`      | Register new company + admin | Public |
-| POST   | `/api/auth/login`         | Login and get tokens         | Public |
-| POST   | `/api/auth/refresh-token` | Refresh access token         | Public |
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| POST | `/api/auth/register` | Register new company + admin | Public |
+| POST | `/api/auth/login` | Login and get tokens | Public |
+| POST | `/api/auth/refresh-token` | Refresh access token | Public |
+
+### Tenant
+
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| GET | `/api/test/me` | Get current tenant info | JWT Required |
 
 > More endpoints will be added as each phase is completed.
 
@@ -172,20 +176,20 @@ docker-compose up --build
 
 ## 📦 Project Phases
 
-| Phase | Description                         | Status         |
-| ----- | ----------------------------------- | -------------- |
-| 1     | Project Foundation & Authentication | ✅ Complete    |
-| 2     | Multi-Tenant System                 | 🔄 In Progress |
-| 3     | Employee & Role Management          | ⏳ Planned     |
-| 4     | Client Management Module            | ⏳ Planned     |
-| 5     | Task Management System              | ⏳ Planned     |
-| 6     | Invoice & Billing Module            | ⏳ Planned     |
-| 7     | Notifications System                | ⏳ Planned     |
-| 8     | File Management                     | ⏳ Planned     |
-| 9     | Analytics Dashboard                 | ⏳ Planned     |
-| 10    | Logging & Monitoring                | ⏳ Planned     |
-| 11    | Optimization & Scaling              | ⏳ Planned     |
-| 12    | Deployment & DevOps                 | ⏳ Planned     |
+| Phase | Description | Status |
+|---|---|---|
+| 1 | Project Foundation & Authentication | ✅ Complete |
+| 2 | Multi-Tenant System | ✅ Complete |
+| 3 | Employee & Role Management | 🔄 In Progress |
+| 4 | Client Management Module | ⏳ Planned |
+| 5 | Task Management System | ⏳ Planned |
+| 6 | Invoice & Billing Module | ⏳ Planned |
+| 7 | Notifications System | ⏳ Planned |
+| 8 | File Management | ⏳ Planned |
+| 9 | Analytics Dashboard | ⏳ Planned |
+| 10 | Logging & Monitoring | ⏳ Planned |
+| 11 | Optimization & Scaling | ⏳ Planned |
+| 12 | Deployment & DevOps | ⏳ Planned |
 
 ---
 
@@ -208,6 +212,7 @@ Notifications, ActivityLogs, Files
 - Global exception middleware — no stack traces exposed
 - Soft delete on all entities — no permanent data loss
 - Tenant isolation — companies cannot access each other's data
+- Tenant middleware validates company status on every request
 
 ---
 
@@ -230,5 +235,5 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 ---
 
 <div align="center">
-  Built with ❤️ using ASP.NET Core 8
+  Built with ❤️ using ASP.NET Core 10
 </div>
