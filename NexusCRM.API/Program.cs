@@ -6,30 +6,22 @@ using NexusCRM.Application.Interfaces;
 using NexusCRM.Infrastructure.Data;
 using NexusCRM.Infrastructure.Services;
 using NexusCRM.Infrastructure.Settings;
+using Scalar.AspNetCore;
 using System.Text;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Database
+// ─── Database ─────────────────────────────────────────────────
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// JWT
+// ─── JWT Settings ─────────────────────────────────────────────
 builder.Services.Configure<JwtSettings>(
     builder.Configuration.GetSection("JwtSettings"));
 
-// JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>()!;
 
-// Tenant
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<ITenantService, TenantService>();
-
-// Services
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<IJwtService, JwtService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<ITenantService, TenantService>();
-
+// ─── Authentication ───────────────────────────────────────────
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -47,33 +39,41 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = jwtSettings.Audience,
         IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(jwtSettings.Secret)),
-        ClockSkew = TimeSpan.Zero // token expires exactly on time
+        ClockSkew = TimeSpan.Zero
     };
 });
-// Add services to the container.
+
+// ─── Services ─────────────────────────────────────────────────
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ITenantService, TenantService>();
 
 builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// ─── Middleware Pipeline ───────────────────────────────────────
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapOpenApi();
+    app.MapScalarApiReference(options =>
+    {
+        options.Title = "NexusCRM API";
+        options.Theme = ScalarTheme.DeepSpace;
+        options.AddHttpAuthentication("Bearer", auth =>
+        {
+            auth.Token = "your-jwt-token-here";
+        });
+    });
 }
 
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication();
+app.UseMiddleware<TenantMiddleware>();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

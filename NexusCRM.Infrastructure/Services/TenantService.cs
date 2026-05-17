@@ -25,7 +25,7 @@ public class TenantService : ITenantService
 
     public Guid GetCurrentUserId()
     {
-        var userId = GetUser().FindFirstValue(ClaimTypes.NameIdentifier);
+        var userId = GetUser().FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         if (string.IsNullOrEmpty(userId))
             throw new UnauthorizedAccessException("User ID not found in token.");
@@ -35,7 +35,7 @@ public class TenantService : ITenantService
 
     public Guid GetCurrentCompanyId()
     {
-        var companyId = GetUser().FindFirstValue("companyId");
+        var companyId = GetUser().FindFirst("companyId")?.Value;
 
         if (string.IsNullOrEmpty(companyId))
             throw new UnauthorizedAccessException("Company ID not found in token.");
@@ -45,7 +45,7 @@ public class TenantService : ITenantService
 
     public string GetCurrentUserRole()
     {
-        var role = GetUser().FindFirstValue(ClaimTypes.Role);
+        var role = GetUser().FindFirst(ClaimTypes.Role)?.Value;
 
         if (string.IsNullOrEmpty(role))
             throw new UnauthorizedAccessException("Role not found in token.");
